@@ -1,6 +1,8 @@
+const path = require('path');
+
 exports.home = async(req, res) => {
     const payload = {
-        pageTitle: "Home"
+        pageTitle: 'Home'
     }
-    res.send("You are home", payload)
+    res.status(200).render("home", payload);
 };
