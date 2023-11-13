@@ -1,12 +1,15 @@
 exports.requireLogin = (req, res, next) => {
-    if (req.session && req.session.user) {
+    // Exclude /login from redirection
+    if (req.session && req.session.user || req.url === '/login') {
         return next();
     } else {
         return res.redirect('/login');
     }
 };
 
-/*Certainly! Let's break down each line of the provided middleware:
+
+/*
+Certainly! Let's break down each line of the modified `requireLogin` middleware:
 
 ```javascript
 exports.requireLogin = (req, res, next) => {
@@ -21,27 +24,30 @@ exports.requireLogin = (req, res, next) => {
    - `next`: A callback function that, when called, passes control to the next middleware in the stack. If `next` is not called, the request remains within the current middleware.
 
 ```javascript
-    if (req.session && req.session.user) {
+    // Exclude /login from redirection
+    if (req.session && req.session.user || req.url === '/login') {
 ```
 
-3. `if (req.session && req.session.user)`: This line checks if there is a `session` object in the request and if that session object has a `user` property. It's assuming that user information is stored in the session.
+3. `if (req.session && req.session.user || req.url === '/login')`: This line checks if either of the following conditions is true:
 
-   - `req.session`: Represents the session object associated with the request. It is typically used to store user-specific information.
-   - `req.session.user`: The assumption here is that the user is considered logged in if there is a `user` property in the session.
+   - `req.session && req.session.user`: Checks if there is a `session` object in the request and if that session object has a `user` property. It assumes that user information is stored in the session.
+   - `req.url === '/login'`: Checks if the requested URL is `/login`.
+
+   If either condition is true, it means the user is either logged in or attempting to access the login page, so the middleware allows the request to proceed to the next middleware or route.
 
 ```javascript
         return next();
     } else {
 ```
 
-4. `return next();`: If the condition in the previous line is true (meaning there is a valid user session), this line calls the `next` function, allowing the request to proceed to the next middleware or route handler in the stack.
+4. `return next();`: If the conditions in the `if` statement are true (meaning there is a valid user session or the URL is `/login`), this line calls the `next` function, allowing the request to proceed to the next middleware or route in the stack.
 
 ```javascript
         return res.redirect('/login');
     }
 ```
 
-5. `return res.redirect('/login');`: If the condition in the `if` statement is false (meaning there is no valid user session), this line sends a redirect response to the client, instructing the browser to navigate to the `/login` URL.
+5. `return res.redirect('/login');`: If the conditions in the `if` statement are false (meaning there is no valid user session, and the URL is not `/login`), this line sends a redirect response to the client, instructing the browser to navigate to the `/login` URL.
 
-This middleware, therefore, checks if a user is logged in based on the presence of a user object in the session. If the user is logged in, it allows the request to proceed; otherwise, it redirects the user to the login page.
+In summary, this modified middleware checks whether the user is logged in or trying to access the login page. If either condition is met, it allows the request to proceed; otherwise, it redirects the user to the login page.
 */
