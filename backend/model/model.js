@@ -46,17 +46,17 @@ const userSchema = mongoos.Schema({
         trim: true,
     },
     bday: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
     },
     bmonth: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
     },
     byear: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
     },
