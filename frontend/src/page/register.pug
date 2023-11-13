@@ -4,7 +4,7 @@ block content
         span
             h1 Good login here.
     .login_container_form 
-        form(action="", method="post")
+        form#referenceform(method="post")
             h3 First name 
             input(type="text", name="firstname", placeholder="firstname", required="")
             h3  Last name
@@ -12,11 +12,11 @@ block content
             h3 Username
             input(type="text", name="username", placeholder="username", required="")
             h3 Password 
-            input(type="password", name="password", placeholder="password", required="")
+            input#pasword(type="password", name="password", placeholder="password", required="")
             h3 Email
-            input(type="text", name="email", placeholder="email", required="")
+            input(type="email", name="email", placeholder="email", required="")
             h3 Gender
             input(type="text", name="gender", placeholder="gender", required="")
             h3 Submit
             input(type="submit", value="register")
-        a(href="/register") Press here to register
+        a(href="/login") Press here to register to login
