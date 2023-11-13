@@ -1,5 +1,14 @@
-extends ../layout/main-layout.pug
+extends ../layout/login-register-layout.pug
 block content
     div
         span
             h1 Good login here.
+    .login_container_form 
+        form(action="", method="post")
+            h3 username 
+            input(type="text", name="username", placeholder="username or email", required="")
+            h3  password
+            input(type="password", name="password", placeholder="password", required="")
+            h3 submit
+            input(type="submit", value="login")
+        a(href="/register") Press here to register
