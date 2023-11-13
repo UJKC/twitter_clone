@@ -1,6 +1,4 @@
-const path = require('path');
-
-exports.home = async(req, res) => {
+exports.home = (req, res, next) => {
     const payload = {
         pageTitle: 'Home'
     }
