@@ -4,7 +4,7 @@ const path = require('path');
 const { home, login } = require('../controller/user');
 
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, '../../../twitter_clone/frontend/src/page'));
+app.set('views', path.join(__dirname, '../../../twitter_clone/frontend/src/page/pugpage'));
 
 app.get('/login', login)
 app.get('/', home);
