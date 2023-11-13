@@ -11,3 +11,10 @@ exports.login = (req, res, next) => {
     }
     res.status(200).render("login", payload);
 }
+
+exports.register = (req, res, next) => {
+    const payload = {
+        pageTitle: 'Register'
+    }
+    res.status(200).render("register", payload);
+}
