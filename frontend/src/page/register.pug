@@ -6,9 +6,9 @@ block content
     .login_container_form 
         form#referenceform(method="post")
             h3 First name 
-            input(type="text", name="firstname", placeholder="firstname", required="")
+            input(type="text", name="firstname", placeholder="firstName", required="")
             h3  Last name
-            input(type="text", name="lastname", placeholder="lastname", required="")
+            input(type="text", name="lastname", placeholder="lastName", required="")
             h3 Username
             input(type="text", name="username", placeholder="username", required="")
             h3 Password 
@@ -17,6 +17,12 @@ block content
             input(type="email", name="email", placeholder="email", required="")
             h3 Gender
             input(type="text", name="gender", placeholder="gender", required="")
+            h3 Bday
+            input(type="number", name="bday", placeholder="01", required="")
+            h3 Bmonth
+            input(type="number", name="bmonth", placeholder="gender", required="")
+            h3 Byear
+            input(type="number", name="byear", placeholder="gender", required="")
             h3 Submit
             input(type="submit", value="register")
         a(href="/login") Press here to register to login

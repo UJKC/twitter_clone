@@ -20,6 +20,7 @@ exports.register = (req, res, next) => {
 }
 
 exports.register_post = (req, res, next) => {
+    var firstname = req.body.firstname;
     res.send(req.body)
 }
 /*
