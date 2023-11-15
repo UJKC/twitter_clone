@@ -161,3 +161,11 @@ exports.login_post = async (req, res, next) => {
   }
 
 }
+
+exports.logout = (req, res, next) => {
+  if (req.session) {
+    req.session.destroy( () => {
+      res.redirect('/login')
+    })
+  }
+}
