@@ -22,35 +22,37 @@ exports.register = (req, res, next) => {
 
 exports.register_post = async (req, res, next) => {
     const payload = req.body;
-const { username, email } = payload;
+    const { username, email } = payload;
 
-// Check if the username is already in use
-const existingUsername = await User.findOne({ username });
+    // Check if the username is already in use
+    const existingUsername = await User.findOne({ username });
 if (existingUsername) {
-    return res.status(400).json({
+    return res.status(400).render('register', {
         message: "Username is already in use",
-        username
+        username,
+        ...payload
     });
 }
 
 // Check if the email is already in use
 const existingEmail = await User.findOne({ email });
 if (existingEmail) {
-    return res.status(400).json({
+    return res.status(400).render('register', {
         message: "Email is already in use",
-        email
+        email,
+        ...payload
     });
 }
 
-// If neither the username nor email is in use, create a new user
-const user = await User.create(payload);
-console.log("User created successfully");
+    // If neither the username nor email is in use, create a new user
+    const user = await User.create(payload);
+    console.log("User created successfully");
 
-// Return a success response or perform any additional actions
-return res.status(200).json({
-    message: "User created successfully",
-    user
-});
+    // Return a success response or perform any additional actions
+    return res.status(200).json({
+        message: "User created successfully",
+        user: user
+    });
 
 }
 /*
