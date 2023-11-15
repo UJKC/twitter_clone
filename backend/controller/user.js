@@ -96,9 +96,17 @@ exports.register_post = async (req, res, next) => {
         // Send the decrypted data back to the user
         console.log(req.session.user)
         console.log({ message: 'Registration successful', user: JSON.parse(decryptedData) });
+
+        const userClone = {
+          firstName: decryptData(newUser.firstName),
+          lastName: decryptData(newUser.lastName),
+          username: decryptData(newUser.username),
+          email: decryptData(newUser.email),
+          password: decryptData(newUser.password),
+        };
     
         await newUser.save();
-        req.session.user = JSON.parse(decryptedData);
+        req.session.user = userClone;
         console.log(req.session.user)
         return res.redirect("/");
 
@@ -107,4 +115,49 @@ exports.register_post = async (req, res, next) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
       }
+}
+
+exports.login_post = async (req, res, next) => {
+  const { usernameOrEmail, password } = req.body;
+  console.log(req.session.user)
+  try {
+    // Encrypt the username or email for comparison with the database
+    const encryptedUsernameOrEmail = encryptData(usernameOrEmail);
+
+    // Find the user in the database by checking both username and email fields
+    const user = await User.findOne({
+      $or: [
+        { username: encryptedUsernameOrEmail },
+        { email: encryptedUsernameOrEmail },
+      ],
+    });
+
+    // If user is not found, return an appropriate response
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+
+    // Encrypt the provided password and check against the stored encrypted password
+    const encryptedPassword = encryptData(password);
+    if (encryptedPassword !== user.password) {
+      return { success: false, message: 'Incorrect password' };
+    }
+
+    const userClone = {
+      firstName: decryptData(user.firstName),
+      lastName: decryptData(user.lastName),
+      username: decryptData(user.username),
+      email: decryptData(user.email),
+      password: decryptData(user.password),
+    };
+
+    req.session.user = userClone;
+
+    // If everything is successful, return a success message and user information
+    return res.redirect('/', );
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Internal server error' };
+  }
+
 }

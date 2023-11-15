@@ -4,11 +4,27 @@ block content
         span
             h1 Good login here.
     .login_container_form 
-        form(action="", method="post")
-            h3 username 
-            input(type="text", name="username", placeholder="username or email", required="")
-            h3  password
-            input(type="password", name="password", placeholder="password", required="")
-            h3 submit
-            input(type="submit", value="login")
-        a(href="/register") Press here to register
+        form(method='post', onsubmit='return validateForm()', action='/login')
+            label(for='usernameOrEmailInput') Username or Email:
+            input#usernameOrEmailInput(type='text', name='usernameOrEmail', placeholder='Enter username or email...', value=usernameOrEmail)
+
+            label(for='passwordInput') Password:
+            input#passwordInput(type='password', name='password', placeholder='Enter password...', value=password)
+
+            button(type='submit') Login
+        a(href="/register") Press here to register to login
+    script.
+        function validateForm() {
+            // Get the input values
+            var usernameOrEmail = document.getElementById("usernameOrEmailInput").value.trim();
+            var password = document.getElementById("passwordInput").value.trim();
+
+            // Check if the fields are not empty
+            if (!usernameOrEmail || !password) {
+                alert("Please fill in all fields.");
+                return false;
+            }
+
+            // Continue with form submission if validation passes
+            return true;
+        }

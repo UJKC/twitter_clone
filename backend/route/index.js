@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { home, login, register, register_post } = require('../controller/user');
+const { home, login, register, register_post, login_post } = require('../controller/user');
 const bodyparser = require('body-parser')
 const User = require('../model/model')
 const session = require('express-session')
@@ -18,6 +18,7 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../../../twitter_clone/frontend/src/page'));
 
 app.get('/login', login)
+app.post('/login', login_post)
 app.get('/', home);
 app.get('/register', register)
 app.post('/register', register_post)
