@@ -4,6 +4,7 @@ const path = require('path');
 const { home, login, register, register_post } = require('../controller/user');
 const bodyparser = require('body-parser')
 const User = require('../model/model')
+const session = require('express-session')
 
 app.use(bodyparser.urlencoded({
     extended: false

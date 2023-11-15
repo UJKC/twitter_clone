@@ -5,6 +5,7 @@ exports.home = (req, res, next) => {
     const payload = {
         pageTitle: 'Home'
     }
+    console.log(req.session.user)
     res.status(200).render("home", payload);
 };
 
@@ -12,6 +13,7 @@ exports.login = (req, res, next) => {
     const payload = {
         pageTitle: 'Login'
     }
+    console.log(req.session.user)
     res.status(200).render("login", payload);
 }
 
@@ -19,6 +21,7 @@ exports.register = (req, res, next) => {
     const payload = {
         pageTitle: 'Register'
     }
+    console.log(req.session.user)
     res.status(200).render("register", payload);
 }
 
@@ -76,16 +79,22 @@ exports.register_post = async (req, res, next) => {
           email: crypto.createHash('md5').update(email).digest('hex'),
           password: encryptedData,
         });
-    
-        await newUser.save();
-    
+
         // Decrypt the data to send it back to the user
         const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
         let decryptedData = decipher.update(encryptedData, 'hex', 'utf-8');
         decryptedData += decipher.final('utf-8');
     
         // Send the decrypted data back to the user
-        res.json({ message: 'Registration successful', user: JSON.parse(decryptedData) });
+        console.log(req.session.user)
+        console.log({ message: 'Registration successful', user: JSON.parse(decryptedData) });
+    
+        await newUser.save();
+        req.session.user = newUser;
+        console.log(req.session.user)
+        return res.redirect("/");
+
+
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

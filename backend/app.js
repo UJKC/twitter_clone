@@ -5,6 +5,15 @@ const app = express();
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 
+const session = require('express-session')
+
+app.use(session({
+    secret: "ujwal",
+    resave: true,
+    saveUninitialized: false
+}))
+
+
 const DATABASE_URL = "mongodb+srv://Ukc:Kncgreat1@cluster0.7obvlrp.mongodb.net/Twitter?retryWrites=true&w=majority"
 
 app.use(bodyparser.urlencoded({
