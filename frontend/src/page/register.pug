@@ -14,8 +14,12 @@ block content
             input#username(type='text', name='username', placeholder='Choose a username', required='', value=username)
             label(for='email') Email:
             input#email(type='email', name='email', placeholder='Enter your email', required='', value=email)
+            label(for='confirmEmailInput') Confirm Email:
+            input#confirmEmailInput(type='email', name='confirmEmail', placeholder='Confirm your email...')
             label(for='password') Password:
             input#password(type='password', name='password', placeholder='Enter your password', required='', value=password)
+            label(for='confirmPasswordInput') Confirm Password:
+            input#confirmPasswordInput(type='password', name='confirmPassword', placeholder='Confirm your password...')
             button(type='submit') Submit
     script.
         function validateForm() {
@@ -26,6 +30,16 @@ block content
             var username = document.getElementById("username").value.trim();
             var password = document.getElementById("password").value.trim();
             var email = document.getElementById("email").value.trim();
+            var confirmEmailInput = document.getElementById("confirmEmailInput").value.trim();
+            var confirmPasswordInput = document.getElementById("confirmPasswordInput").value.trim();
+            if (email !== confirmEmailInput) {
+            alert("Emails do not match.");
+            return false;
+            }
+            if (password !== confirmPasswordInput) {
+                alert("Passwords do not match.");
+                return false;
+            }
             if (!firstName || !lastName || !username || !password || !email) {
                 alert("Please fill in all fields.");
                 return false;

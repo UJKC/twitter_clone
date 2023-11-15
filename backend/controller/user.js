@@ -26,23 +26,25 @@ exports.register_post = async (req, res, next) => {
 
     // Check if the username is already in use
     const existingUsername = await User.findOne({ username });
-if (existingUsername) {
-    return res.status(400).render('register', {
-        message: "Username is already in use",
-        username,
-        ...payload
-    });
-}
+    if (existingUsername) {
+        return res.status(400).render('register', {
+            message: "Username is already in use",
+            ...payload,
+            // Exclude the duplicated username from the form
+            username: ''
+        });
+    }
 
-// Check if the email is already in use
-const existingEmail = await User.findOne({ email });
-if (existingEmail) {
-    return res.status(400).render('register', {
-        message: "Email is already in use",
-        email,
-        ...payload
-    });
-}
+    // Check if the email is already in use
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+        return res.status(400).render('register', {
+            message: "Email is already in use",
+            ...payload,
+            // Exclude the duplicated email from the form
+            email: '',
+        });
+    }
 
     // If neither the username nor email is in use, create a new user
     const user = await User.create(payload);
@@ -55,8 +57,3 @@ if (existingEmail) {
     });
 
 }
-/*
-CHeck for password is same two times
-Check for empty fields
-Get values back
-*/
