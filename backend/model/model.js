@@ -1,12 +1,13 @@
-const mongoos = require('mongoose');
+const mongoose = require('mongoose');
 
 
 // This is required for accessing the database as template i guess
-const userSchema = mongoos.Schema({
+const userSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, "First Name is required"],
         trim: true,
         text: true,
     },
-module.exports = mongoos.model('User', userSchema);
+})
+module.exports = mongoose.model('User', userSchema);
