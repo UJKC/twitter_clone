@@ -1,25 +1,35 @@
 extends ../layout/register-layout.pug
+
 block content
     div
         span
             h1 Good login here.
     .login_container_form
         form(method='post', onsubmit='return validateForm()')
-            label(for='textInput') Enter Text:
-            input#textInput(type='text', name='text', value=name, placeholder='Type something...')
+            label(for='firstName') First Name:
+            input#firstName(type='text', name='firstName', placeholder='Enter your first name', required='', value=firstName)
+            label(for='lastName') Last Name:
+            input#lastName(type='text', name='lastName', placeholder='Enter your last name', required='', value=lastName)
+            label(for='username') Username:
+            input#username(type='text', name='username', placeholder='Choose a username', required='', value=username)
+            label(for='email') Email:
+            input#email(type='email', name='email', placeholder='Enter your email', required='', value=email)
+            label(for='password') Password:
+            input#password(type='password', name='password', placeholder='Enter your password', required='', value=password)
             button(type='submit') Submit
-        a(href="/login") Press here to register to login
-    script.
-        function validateForm() {
-        // Get the input value
-        var inputValue = document.getElementById("textInput").value;
-        // Trim the input value
-        var trimmedValue = inputValue.trim();
-        // Check if the trimmed value is empty
-        if (trimmedValue === "") {
-        alert("Please enter a non-empty value.");
-        return false; // Prevent form submission
+script.
+    function validateForm() {
+        // Your validation logic here
+        // Example: Check if the fields are not empty
+        var firstName = document.getElementById("firstName").value.trim();
+        var lastName = document.getElementById("lastName").value.trim();
+        var username = document.getElementById("username").value.trim();
+        var password = document.getElementById("password").value.trim();
+        var email = document.getElementById("email").value.trim();
+        if (!firstName || !lastName || !username || !password || !email) {
+            alert("Please fill in all fields.");
+            return false;
         }
-        // Continue with form submission if the value is not empty
+        // Continue with form submission if validation passes
         return true;
-        }
+    }
