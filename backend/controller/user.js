@@ -1,3 +1,4 @@
+const User = require('../model/model')
 exports.home = (req, res, next) => {
     const payload = {
         pageTitle: 'Home'
@@ -19,26 +20,17 @@ exports.register = (req, res, next) => {
     res.status(200).render("register", payload);
 }
 
-exports.register_post = (req, res, next) => {
+exports.register_post = async (req, res, next) => {
     var payload = req.body;
-
-    // Check if the properties exist before using trim
-    var firstName = payload.firstName ? payload.firstName.trim() : '';
-    var lastName = payload.lastName ? payload.lastName.trim() : '';
-    var username = payload.username ? payload.username.trim() : '';
-    var password = payload.password ? payload.password.trim() : '';
-    var email = payload.email ? payload.email.trim() : '';
-    var gender = payload.gender ? payload.gender.trim() : '';
-    var bday = payload.bday ? payload.bday.trim() : '';
-    var bmonth = payload.bmonth ? payload.bmonth.trim() : '';
-    var byear = payload.byear ? payload.byear.trim() : '';
-
-    if (firstName && lastName && username && password && email && gender && bday && bmonth && byear) {
-        console.log("Noted");
-        res.json(payload);
-    } else {
-        // Adjust your rendering logic here
-        res.status(200).render('register');
+    const name = payload.name;
+    check = await User.findOne({name: name})
+    if (check) {
+        const user = User.create(payload)
+    }
+    else {
+        res.status(400).json({
+            message: "User already exist"
+        })
     }
 }
 /*
