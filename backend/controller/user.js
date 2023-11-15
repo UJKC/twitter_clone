@@ -1,11 +1,12 @@
 const User = require('../model/model')
 const crypto = require('crypto');
+const { encryptData, decryptData } = require('../helper/encryption_decryption');
 
 exports.home = (req, res, next) => {
     const payload = {
-        pageTitle: 'Home'
+        pageTitle: 'Home',
+        userLoggedIn: req.session.user
     }
-    console.log(req.session.user)
     res.status(200).render("home", payload);
 };
 
@@ -40,8 +41,11 @@ exports.register_post = async (req, res, next) => {
         encryptedData += cipher.final('hex');
     
         // Check if the username or email already exists in the database using encrypted values
-        const existingUsername = await User.findOne({ username: crypto.createHash('md5').update(username).digest('hex') });
-        const existingEmail = await User.findOne({ email: crypto.createHash('md5').update(email).digest('hex') });
+        const encryptedUsername = encryptData(username);
+        const encryptedEmail = encryptData(email);
+
+        const existingUsername = await User.findOne({ username: encryptedUsername });
+        const existingEmail = await User.findOne({ email: encryptedEmail });
     
         if (existingUsername && existingEmail) {
           // Both username and email are duplicates
@@ -72,12 +76,16 @@ exports.register_post = async (req, res, next) => {
         }
     
         // Create a new user in the database with encrypted values
+        const encryptedFirstName = encryptData(firstName);
+        const encryptedLastName = encryptData(lastName);
+        const encryptedPassword = encryptData(password);
+
         const newUser = new User({
-          firstName: crypto.createHash('md5').update(firstName).digest('hex'),
-          lastName: crypto.createHash('md5').update(lastName).digest('hex'),
-          username: crypto.createHash('md5').update(username).digest('hex'),
-          email: crypto.createHash('md5').update(email).digest('hex'),
-          password: encryptedData,
+        firstName: encryptedFirstName,
+        lastName: encryptedLastName,
+        username: encryptedUsername,
+        email: encryptedEmail,
+        password: encryptedPassword,
         });
 
         // Decrypt the data to send it back to the user
@@ -90,7 +98,7 @@ exports.register_post = async (req, res, next) => {
         console.log({ message: 'Registration successful', user: JSON.parse(decryptedData) });
     
         await newUser.save();
-        req.session.user = newUser;
+        req.session.user = JSON.parse(decryptedData);
         console.log(req.session.user)
         return res.redirect("/");
 
