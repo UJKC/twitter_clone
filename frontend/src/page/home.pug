@@ -4,10 +4,11 @@ block content
         span
             h1 Good you are home again.
             h1 #{userLoggedIn.firstName}
-            .profileimg
-                img(src=userLoggedIn.picture, alt="ujwalpic", style='height: min-content;')
-            .textarea
-                input#exampleTextBox.form-control(type='text', placeholder='Posting Content')
+            div(style='display: flex;')
+                .profileimg.col-1
+                    img(src=userLoggedIn.picture, alt="ujwalpic", style='height: min-content;')
+                .textarea.col-11
+                    input#exampleTextBox.form-control(type='text', placeholder='Enter text')
             button#postButton.btn.btn-primary(type='button', disabled='') Post
     script.
         document.addEventListener('DOMContentLoaded', function () {
@@ -17,3 +18,13 @@ block content
             postButton.disabled = this.value.trim() === ''; // Enable button if there's text in the input
             });
         });
+    style.
+        .profileimg {
+            min-width: 75px; /* Fixed width for the column */
+            min-height: 75px; /* Minimum height for the column */
+        }
+        .profileimg img {
+            width: 100%; /* Make the image take 100% of the column width */
+            height: 100%; /* Make the image take 100% of the column height */
+            object-fit: cover; /* Maintain aspect ratio and cover the container */
+        }
