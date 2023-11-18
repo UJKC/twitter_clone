@@ -103,6 +103,7 @@ exports.register_post = async (req, res, next) => {
           username: decryptData(newUser.username),
           email: decryptData(newUser.email),
           password: decryptData(newUser.password),
+          profile: newUser.profile,
         };
     
         await newUser.save();
@@ -149,8 +150,10 @@ exports.login_post = async (req, res, next) => {
       username: decryptData(user.username),
       email: decryptData(user.email),
       password: decryptData(user.password),
+      picture: user.picture,
     };
-
+    
+    console.log(userClone)
     req.session.user = userClone;
 
     // If everything is successful, return a success message and user information

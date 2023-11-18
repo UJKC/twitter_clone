@@ -4,3 +4,16 @@ block content
         span
             h1 Good you are home again.
             h1 #{userLoggedIn.firstName}
+            .profileimg
+                img(src=userLoggedIn.picture, alt="ujwalpic", style='height: min-content;')
+            .textarea
+                input#exampleTextBox.form-control(type='text', placeholder='Enter text')
+            button#postButton.btn.btn-primary(type='button', disabled='') Post
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            const exampleTextBox = document.getElementById('exampleTextBox');
+            const postButton = document.getElementById('postButton');
+            exampleTextBox.addEventListener('input', function () {
+            postButton.disabled = this.value.trim() === ''; // Enable button if there's text in the input
+            });
+        });
