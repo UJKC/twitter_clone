@@ -1,4 +1,5 @@
 const User = require('../model/model')
+const Post = require('../model/post')
 const crypto = require('crypto');
 const { encryptData, decryptData } = require('../helper/encryption_decryption');
 
