@@ -184,21 +184,19 @@ exports.postinput = async (req, res, next) => {
     });
   }
 
-  console.log(content)
   try {
     const newPost = {
       content: content,
-      postedBy: req.session.user,
-    }
+      postedBy: req.session.user, // Use the user's _id directly
+    };
 
-    console.log(newPost)
-    Post.create(newPost)
-    .then( async posted => {
-      posted = await User.populate(posted, {
-        path: 'postedBy'
-      })
-    })
-    console.log(newPost)
+    const posted = await Post.create(newPost);
+
+    // Populate the postedBy field with all fields from the User model
+
+    console.log(posted);
+
+    res.status(201).json(posted);
   } catch (err) {
     console.error(err);
     res.status(500).json({
