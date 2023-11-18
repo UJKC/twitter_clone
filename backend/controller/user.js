@@ -198,7 +198,10 @@ exports.postinput = async (req, res, next) => {
 
     res.status(201).json({
       status: "Posted",
-      message: posted.content
+      message: posted.content,
+      username: posted.postedBy.username,
+      picture: posted.postedBy.picture,
+      createdAt: posted.createdAt
     });
   } catch (err) {
     console.error(err);

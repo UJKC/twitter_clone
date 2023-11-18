@@ -33,3 +33,8 @@ mongoose.connect(DATABASE_URL, {
 const server = app.listen(3000, () => {
     console.log(`Server is on on 3000 port. Dont mind everything is fine.`);
 })
+
+/*
+Encrypt everything
+Have refernce of tweets from tweet database to user database as array?
+*/
