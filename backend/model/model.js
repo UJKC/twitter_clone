@@ -31,8 +31,13 @@ const userSchema = mongoose.Schema({
             type: String,
             required: [true, "password is required"],
         },
+        picture: {
+            type: String,
+            trim: true,
+            default: "/public/images/ujwal.jpg",
+        }
 },
 {
-    timestamp: true,
+    timestamps: true,
 });
 module.exports = mongoose.model('User', userSchema);

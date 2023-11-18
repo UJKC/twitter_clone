@@ -14,6 +14,9 @@ const algorithm = 'aes-256-cbc';
 app.use(bodyparser.urlencoded({
     extended: false
 }));
+
+app.use(express.static(path.join(__dirname, '../../../twitter_clone/frontend/src')));
+
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../../../twitter_clone/frontend/src/page'));
 
