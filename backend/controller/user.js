@@ -172,3 +172,12 @@ exports.logout = (req, res, next) => {
     })
   }
 }
+
+exports.postinput = (req, res, next) => {
+  if (!req.body) {
+    console.log("Nothing sent")
+  }
+  res.status(200).json({
+    message: "It works"
+  })
+}
