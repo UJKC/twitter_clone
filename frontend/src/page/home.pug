@@ -10,42 +10,50 @@ block content
                     img(src=userLoggedIn.picture, alt="ujwalpic", style='height: min-content;')
                 .textarea.col-11
                     input#exampleTextBox.form-control(type='text', placeholder='Enter text')
-                    button#postButton.btn.btn-primary(type='button', disabled='') Post
+            button#postButton.btn.btn-primary(type='button', disabled='') Post
+        #responseContainer
         script.
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('DOMContentLoaded event triggered');
                 
                 const exampleTextBox = document.getElementById('exampleTextBox');
                 const postButton = document.getElementById('postButton');
+                const responseContainer = document.getElementById('responseContainer');
                 
                 exampleTextBox.addEventListener('input', function () {
                     console.log('Input event triggered');
                     postButton.disabled = this.value.trim() === ''; // Enable button if there's text in the input
                 });
                 
-                postButton.addEventListener('click', function () {
+                postButton.addEventListener('click', async function () {
                     console.log('Post button clicked');
                     const textContent = exampleTextBox.value.trim();
                     // Check if there is content before making the POST request
                     if (textContent) {
                         console.log('Sending POST request...');
                         // Continue with your fetch logic here
-                        fetch('/api/posts', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ content: textContent }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
+                        try {
+                            const response = await fetch('/api/posts', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ content: textContent }),
+                            });
+                            
+                            const data = await response.json();
                             console.log('Post successful:', data);
-                            // You can handle the response as needed
-                        })
-                        .catch(error => {
+
+                            // Check if the response status is 200 or 201
+                            if (response.status === 200 || response.status === 201) {
+                                // Create HTML elements for success message and prepend to responseContainer
+                                const successMessage = `<p style="color: green;"> ${data.message}</p>`;
+                                responseContainer.insertAdjacentHTML('afterbegin', successMessage);
+                            }
+                        } catch (error) {
                             console.error('Error posting:', error);
                             // Handle the error as needed
-                        });
+                        }
                     }
                 });
             })

@@ -196,7 +196,10 @@ exports.postinput = async (req, res, next) => {
 
     console.log(posted);
 
-    res.status(201).json(posted);
+    res.status(201).json({
+      status: "Posted",
+      message: posted.content
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({
