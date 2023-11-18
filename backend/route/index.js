@@ -4,6 +4,7 @@ const path = require('path');
 const { home, login, register, register_post, login_post, logout, postinput, postoutput } = require('../controller/user');
 const bodyparser = require('body-parser')
 const User = require('../model/model')
+const Post = require('../model/post')
 const session = require('express-session')
 const crypto = require('crypto');
 const { encryptData, decryptData } = require('../helper/encryption_decryption');
@@ -14,6 +15,8 @@ const algorithm = 'aes-256-cbc';
 app.use(bodyparser.urlencoded({
     extended: false
 }));
+
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '../../../twitter_clone/frontend/src')));
 

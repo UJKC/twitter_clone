@@ -5,6 +5,8 @@ const app = express();
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 
+app.use(express.json());
+
 const session = require('express-session')
 
 app.use(session({

@@ -9,7 +9,7 @@ const PostSchema = mongoose.Schema({
             default: "I am new here",
         },
         postedBy: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Object,
             ref: 'User',
         },
         pinned: {
@@ -19,4 +19,4 @@ const PostSchema = mongoose.Schema({
 {
     timestamps: true,
 });
-module.exports = mongoose.model('Post', userSchema);
+module.exports = mongoose.model('Post', PostSchema);

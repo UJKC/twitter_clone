@@ -2,6 +2,7 @@ const User = require('../model/model')
 const Post = require('../model/post')
 const crypto = require('crypto');
 const { encryptData, decryptData } = require('../helper/encryption_decryption');
+const { PassThrough } = require('stream');
 
 exports.home = (req, res, next) => {
     const payload = {
@@ -174,11 +175,35 @@ exports.logout = (req, res, next) => {
   }
 }
 
-exports.postinput = (req, res, next) => {
-  if (!req.body) {
-    console.log("Nothing sent")
+exports.postinput = async (req, res, next) => {
+  const { content } = req.body;
+
+  if (!content) {
+    return res.status(400).json({
+      message: "Content is required",
+    });
   }
-  res.status(200).json({
-    message: "It works"
-  })
-}
+
+  console.log(content)
+  try {
+    const newPost = {
+      content: content,
+      postedBy: req.session.user,
+    }
+
+    console.log(newPost)
+    Post.create(newPost)
+    .then( async posted => {
+      posted = await User.populate(posted, {
+        path: 'postedBy'
+      })
+    })
+    console.log(newPost)
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Internal server error",
+      error: err,
+    });
+  }
+};
