@@ -87,32 +87,87 @@ block content
 
                             // Add event listeners to the buttons in the postElement
                             postElement.querySelectorAll('.comment-btn').forEach(button => {
-                                button.addEventListener('click', function() {
+                                button.addEventListener('click', async function () {
                                     // Get the post-id attribute value
                                     var postId = this.getAttribute('data-post-id');
 
                                     // Display the post-id in an alert
                                     alert('Comment Post ID: ' + postId);
+
+                                    try {
+                                        const response = await fetch(`/api/posts/${postId}`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                // Add any additional headers as needed
+                                            },
+                                            // Add any additional options for the request as needed
+                                        });
+
+                                        const data = await response.json();
+
+                                        // Handle the response data as needed
+                                        console.log('Retweet Button Clicked (PUT):', data);
+                                    } catch (error) {
+                                        console.error('Error updating post:', error);
+                                        // Handle the error as needed
+                                    }
                                 });
                             });
 
                             postElement.querySelectorAll('.retweet-btn').forEach(button => {
-                                button.addEventListener('click', function() {
+                                button.addEventListener('click', async function () {
                                     // Get the post-id attribute value
                                     var postId = this.getAttribute('data-post-id');
 
                                     // Display the post-id in an alert
                                     alert('Retweet Post ID: ' + postId);
+                                    try {
+                                        const response = await fetch(`/api/posts/${postId}`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                // Add any additional headers as needed
+                                            },
+                                            // Add any additional options for the request as needed
+                                        });
+
+                                        const data = await response.json();
+
+                                        // Handle the response data as needed
+                                        console.log('Retweet Button Clicked (PUT):', data);
+                                    } catch (error) {
+                                        console.error('Error updating post:', error);
+                                        // Handle the error as needed
+                                    }
                                 });
                             });
 
                             postElement.querySelectorAll('.heart-btn').forEach(button => {
-                                button.addEventListener('click', function() {
+                                button.addEventListener('click', async function () {
                                     // Get the post-id attribute value
                                     var postId = this.getAttribute('data-post-id');
 
                                     // Display the post-id in an alert
                                     alert('Heart Post ID: ' + postId);
+                                    try {
+                                        const response = await fetch(`/api/posts/like/${postId}`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                // Add any additional headers as needed
+                                            },
+                                            // Add any additional options for the request as needed
+                                        });
+
+                                        const data = await response.json();
+
+                                        // Handle the response data as needed
+                                        console.log('Heart Button Clicked (PUT):', data);
+                                    } catch (error) {
+                                        console.error('Error updating post:', error);
+                                        // Handle the error as needed
+                                    }
                                 });
                             });
 

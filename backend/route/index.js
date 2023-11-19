@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { home, login, register, register_post, login_post, logout, postinput, postoutput, getallposts } = require('../controller/user');
+const { home, login, register, register_post, login_post, logout, postinput, postoutput, getallposts, updatelikedposts } = require('../controller/user');
 const bodyparser = require('body-parser')
 const User = require('../model/model')
 const Post = require('../model/post')
@@ -32,6 +32,7 @@ app.get('/logout', logout)
 app.post('/api/posts', postinput)
 app.get('/api/posts', postinput)
 app.get('/api/all/posts', getallposts)
+app.put('/api/posts/like/:postid', updatelikedposts)
 
 /*
 app.post('/api/posts', postoutput)

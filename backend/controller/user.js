@@ -247,3 +247,30 @@ exports.getallposts = async (req, res, posts) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+
+exports.updatelikedposts = async (req, res, next) => {
+  try {
+    const userId = req.session.user._id; // Replace with the actual user id, you can get this from the user authentication
+    const postId = req.params.postid;
+
+    // Check if the post is already liked by the user
+    const user = await User.findById(userId);
+    if (user.likes.includes(postId)) {
+      return res.status(400).json({ message: 'Post already liked by the user' });
+    }
+
+    // If not, add the post to the user's liked posts
+    user.likes.push(postId);
+    await user.save();
+
+    // You can also update the like count in the Post model if needed
+    const post = await Post.findById(postId);
+    post.likes.push(userId);
+    await post.save();
+
+    res.status(200).json({ message: 'Post liked successfully' });
+  } catch (error) {
+    console.error('Error updating liked posts:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
