@@ -37,4 +37,8 @@ const server = app.listen(3000, () => {
 /*
 Encrypt everything
 Have refernce of tweets from tweet database to user database as array?
+Time issue
+Days ago
+Get only required Information
+Optimise by not calling again and again
 */

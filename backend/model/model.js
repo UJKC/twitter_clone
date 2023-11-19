@@ -33,7 +33,13 @@ const userSchema = mongoose.Schema({
             type: String,
             trim: true,
             default: "/public/images/ujwal.jpg",
-        }
+        },
+        posts: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Post',
+            }
+        ]
 },
 {
     timestamps: true,
