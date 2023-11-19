@@ -222,6 +222,11 @@ exports.postinput = async (req, res, next) => {
 
 exports.getallposts = async (req, res, posts) => {
   var poster_array = [];
+  const options = {
+    timeZone: 'Asia/Kolkata', // Indian Standard Time
+    dateStyle: 'full',
+    timeStyle: 'long',
+  };
   try {
     const posts = await Post.find(); // Retrieve all posts from the database
     console.log(posts) // Retrieve all posts from the database
@@ -232,6 +237,7 @@ exports.getallposts = async (req, res, posts) => {
       populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
       populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
       populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
+      populatedPost.createdAt = new Date(populatedPost.createdAt);
       poster_array.push(populatedPost);
     }
     console.log(poster_array)
