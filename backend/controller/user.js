@@ -219,3 +219,26 @@ exports.postinput = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.getallposts = async (req, res, posts) => {
+  var poster_array = [];
+  try {
+    const posts = await Post.find(); // Retrieve all posts from the database
+    console.log(posts) // Retrieve all posts from the database
+
+    // Use for...of loop to iterate over posts
+    for (var poster of posts) {
+      var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
+      populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
+      populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
+      populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
+      poster_array.push(populatedPost);
+    }
+    console.log(poster_array)
+    res.status(200).json(poster_array);
+  }
+  catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}

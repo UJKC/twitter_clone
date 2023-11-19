@@ -13,18 +13,19 @@ block content
             button#postButton.btn.btn-primary(type='button', disabled='') Post
         #responseContainer
         script.
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', async function () {
                 console.log('DOMContentLoaded event triggered');
-                
+
+                // Your existing event listeners and fetch logic here
                 const exampleTextBox = document.getElementById('exampleTextBox');
                 const postButton = document.getElementById('postButton');
-                const responseContainer = document.getElementById('responseContainer');
-                
+                let responseContainer = document.getElementById('responseContainer');
+
                 exampleTextBox.addEventListener('input', function () {
                     console.log('Input event triggered');
                     postButton.disabled = this.value.trim() === ''; // Enable button if there's text in the input
                 });
-                
+
                 postButton.addEventListener('click', async function () {
                     console.log('Post button clicked');
                     const textContent = exampleTextBox.value.trim();
@@ -40,14 +41,20 @@ block content
                                 },
                                 body: JSON.stringify({ content: textContent }),
                             });
-                            
+
                             const data = await response.json();
                             console.log('Post successful:', data);
 
                             // Check if the response status is 200 or 201
                             if (response.status === 200 || response.status === 201) {
                                 // Create HTML elements for success message and prepend to responseContainer
-                                const successMessage = `<img src=${data.post.picture} alt="ujwal pic"><p style="color: green;"> ${data.post.content}</p><p style="color: green;"> ${data.post.username}</p><p style="color: green;"> ${data.post.createdAt}</p><i class="fas fa-comment"></i><i class="fas fa-retweet"></i><i class="fas fa-heart"></i>`;
+                                const successMessage = `<img src=${data.post.picture} alt="ujwal pic">
+                                                        <p style="color: green;"> ${data.post.content}</p>
+                                                        <p style="color: green;"> ${data.post.username}</p>
+                                                        <p style="color: green;"> ${data.post.createdAt}</p>
+                                                        <i class="fas fa-comment"></i>
+                                                        <i class="fas fa-retweet"></i>
+                                                        <i class="fas fa-heart"></i>`;
                                 responseContainer.insertAdjacentHTML('afterbegin', successMessage);
                             }
                         } catch (error) {
@@ -56,7 +63,34 @@ block content
                         }
                     }
                 });
-            })
+
+                // Fetch data from the '/api/all/posts' endpoint
+                try {
+                    const response = await fetch('/api/all/posts');
+                    const data = await response.json();
+
+                    // Check if the response status is 200
+                    if (response.status === 200) {
+                        // Iterate over the data array and append each post to the responseContainer
+                        data.forEach(post => {
+                            const postElement = document.createElement('div');
+                            postElement.innerHTML = `<img src=${post.postedBy.picture} alt="ujwal pic">
+                                <p style="color: green;"> ${post.content}</p>
+                                <p style="color: green;"> ${post.postedBy.username}</p>
+                                <p style="color: green;"> ${post.createdAt}</p>
+                                <i class="fas fa-comment"></i>
+                                <i class="fas fa-retweet"></i>
+                                <i class="fas fa-heart"></i>`;
+                            responseContainer.insertBefore(postElement, responseContainer.firstChild);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching posts:', error);
+                    // Handle the error as needed
+                }
+
+
+            });
         style.
             .profileimg {
                 min-width: 75px; /* Fixed width for the column */
