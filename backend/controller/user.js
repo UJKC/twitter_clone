@@ -2,7 +2,6 @@ const User = require('../model/model')
 const Post = require('../model/post')
 const crypto = require('crypto');
 const { encryptData, decryptData } = require('../helper/encryption_decryption');
-const { PassThrough } = require('stream');
 
 exports.home = (req, res, next) => {
     const payload = {
@@ -105,7 +104,7 @@ exports.register_post = async (req, res, next) => {
           username: decryptData(newUser.username),
           email: decryptData(newUser.email),
           password: decryptData(newUser.password),
-          profile: newUser.profile,
+          picture: newUser.picture,
         };
     
         await newUser.save();

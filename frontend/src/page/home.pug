@@ -52,9 +52,9 @@ block content
                                                         <p style="color: green;"> ${data.post.content}</p>
                                                         <p style="color: green;"> ${data.post.username}</p>
                                                         <p style="color: green;"> ${data.post.createdAt}</p>
-                                                        <i class="fas fa-comment"></i>
-                                                        <i class="fas fa-retweet"></i>
-                                                        <i class="fas fa-heart"></i>`;
+                                                        <button class="comment-btn" data-post-id=${data.post._id}><i class="fas fa-comment"></i></button>
+                                                        <button class="retweet-btn" data-post-id=${data.post._id}><i class="fas fa-retweet"></i></button>
+                                                        <button class="heart-btn" data-post-id=${data.post._id}><i class="fas fa-heart"></i></button>`
                                 responseContainer.insertAdjacentHTML('afterbegin', successMessage);
                             }
                         } catch (error) {
@@ -74,23 +74,58 @@ block content
                         // Iterate over the data array and append each post to the responseContainer
                         data.forEach(post => {
                             const postElement = document.createElement('div');
-                            postElement.innerHTML = `<img src=${post.postedBy.picture} alt="ujwal pic">
-                                <p style="color: green;"> ${post.content}</p>
-                                <p style="color: green;"> ${post.postedBy.username}</p>
-                                <p style="color: green;"> ${post.createdAt}</p>
-                                <i class="fas fa-comment"></i>
-                                <i class="fas fa-retweet"></i>
-                                <i class="fas fa-heart"></i>`;
+                            postElement.innerHTML = `<div post-id=${post._id}>
+                                    <img src=${post.postedBy.picture} alt="ujwal pic">
+                                    <p style="color: green;"> ${post.content}</p>
+                                    <p style="color: green;"> ${post.postedBy.username}</p>
+                                    <p style="color: green;"> ${post.createdAt}</p>
+                                    <button class="comment-btn" data-post-id=${post._id}><i class="fas fa-comment"></i></button>
+                                    <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
+                                    <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
+                                </div>
+                                <hr>`;
+
+                            // Add event listeners to the buttons in the postElement
+                            postElement.querySelectorAll('.comment-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    // Get the post-id attribute value
+                                    var postId = this.getAttribute('data-post-id');
+
+                                    // Display the post-id in an alert
+                                    alert('Comment Post ID: ' + postId);
+                                });
+                            });
+
+                            postElement.querySelectorAll('.retweet-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    // Get the post-id attribute value
+                                    var postId = this.getAttribute('data-post-id');
+
+                                    // Display the post-id in an alert
+                                    alert('Retweet Post ID: ' + postId);
+                                });
+                            });
+
+                            postElement.querySelectorAll('.heart-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    // Get the post-id attribute value
+                                    var postId = this.getAttribute('data-post-id');
+
+                                    // Display the post-id in an alert
+                                    alert('Heart Post ID: ' + postId);
+                                });
+                            });
+
                             responseContainer.insertBefore(postElement, responseContainer.firstChild);
                         });
                     }
-                } catch (error) {
+                }
+                catch (error) {
                     console.error('Error fetching posts:', error);
                     // Handle the error as needed
                 }
-
-
             });
+
         style.
             .profileimg {
                 min-width: 75px; /* Fixed width for the column */
