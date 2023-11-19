@@ -128,19 +128,24 @@ block content
                                     // Display the post-id in an alert
                                     alert('Retweet Post ID: ' + postId);
                                     try {
-                                        const response = await fetch(`/api/posts/${postId}`, {
-                                            method: 'PUT',
+                                        const response = await fetch('/api/posts', {
+                                            method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
-                                                // Add any additional headers as needed
                                             },
-                                            // Add any additional options for the request as needed
+                                            body: JSON.stringify({ content: textContent }),
                                         });
 
                                         const data = await response.json();
 
                                         // Handle the response data as needed
-                                        console.log('Retweet Button Clicked (PUT):', data);
+                                        console.log('Retweet Button Clicked (Post):', data);
+                                        if (likesCountElement) {
+                                            likesCountElement.textContent = `Likes: ${data.likesCount !== null ? data.likesCount : 0}`;
+                                        }
+                                        else {
+                                            console.error('Likes count element not found');
+                                        }
                                     } catch (error) {
                                         console.error('Error updating post:', error);
                                         // Handle the error as needed
