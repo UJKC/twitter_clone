@@ -47,7 +47,7 @@ block content
                             // Check if the response status is 200 or 201
                             if (response.status === 200 || response.status === 201) {
                                 // Create HTML elements for success message and prepend to responseContainer
-                                const successMessage = `<img src=${data.picture} alt="ujwal pic"><p style="color: green;"> ${data.message}</p><p style="color: green;"> ${data.username}</p><p style="color: green;"> ${data.createdAt}</p>`;
+                                const successMessage = `<img src=${data.picture} alt="ujwal pic"><p style="color: green;"> ${data.message}</p><p style="color: green;"> ${data.username}</p><p style="color: green;"> ${data.createdAt}</p><i class="fas fa-comment"></i><i class="fas fa-retweet"></i><i class="fas fa-heart"></i>`;
                                 responseContainer.insertAdjacentHTML('afterbegin', successMessage);
                             }
                         } catch (error) {
