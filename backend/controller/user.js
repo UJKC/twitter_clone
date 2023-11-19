@@ -147,6 +147,7 @@ exports.login_post = async (req, res, next) => {
     }
 
     const userClone = {
+      _id: user._id,
       firstName: decryptData(user.firstName),
       lastName: decryptData(user.lastName),
       username: decryptData(user.username),
@@ -187,27 +188,34 @@ exports.postinput = async (req, res, next) => {
   try {
     const newPost = {
       content: content,
-      postedBy: req.session.user, // Use the user's _id directly
+      postedBy: req.session.user._id, // Use the user's _id directly
     };
 
     const posted = await Post.create(newPost);
 
     // Populate the postedBy field with all fields from the User model
+    const populatedPost = await Post.findById(posted._id)
+      .populate('postedBy', '-password'); // Exclude fields you don't want to include
 
-    console.log(posted);
+    console.log(populatedPost);
+
+    var posteddecryption = {
+      content: populatedPost.content,
+      firstName: decryptData(populatedPost.postedBy.firstName),
+      lastName: decryptData(populatedPost.postedBy.lastName),
+      username: decryptData(populatedPost.postedBy.username),
+      picture: populatedPost.postedBy.picture,
+      createdAt: populatedPost.createdAt
+    }
+
+    console.log(posteddecryption);
 
     res.status(201).json({
-      status: "Posted",
-      message: posted.content,
-      username: posted.postedBy.username,
-      picture: posted.postedBy.picture,
-      createdAt: posted.createdAt
+      message: "Post created successfully",
+      post: posteddecryption,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      message: "Internal server error",
-      error: err,
-    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

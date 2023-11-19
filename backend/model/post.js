@@ -9,7 +9,7 @@ const PostSchema = mongoose.Schema({
             default: "I am new here",
         },
         postedBy: {
-            type: Object,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },
         pinned: {
