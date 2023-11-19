@@ -253,19 +253,26 @@ exports.updatelikedposts = async (req, res, next) => {
     const userId = req.session.user._id; // Replace with the actual user id, you can get this from the user authentication
     const postId = req.params.postid;
 
-    // Check if the post is already liked by the user
     const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+    // Check if the post is already liked by the user
+    
     if (user.likes.includes(postId)) {
-      return res.status(400).json({ message: 'Post already liked by the user' });
+      // User has already liked the post, remove the like
+      user.likes.pull(postId);
+      post.likes.pull(userId);
+
+      await user.save();
+      await post.save();
+
+      return res.status(200).json({ message: 'Post unliked successfully' });
     }
 
     // If not, add the post to the user's liked posts
     user.likes.push(postId);
-    await user.save();
-
-    // You can also update the like count in the Post model if needed
-    const post = await Post.findById(postId);
     post.likes.push(userId);
+
+    await user.save();
     await post.save();
 
     res.status(200).json({ message: 'Post liked successfully' });
