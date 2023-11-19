@@ -198,7 +198,9 @@ exports.postinput = async (req, res, next) => {
 
     console.log(populatedPost);
 
+    
     var posteddecryption = {
+      _id: populatedPost._id,
       content: populatedPost.content,
       firstName: decryptData(populatedPost.postedBy.firstName),
       lastName: decryptData(populatedPost.postedBy.lastName),
@@ -265,7 +267,9 @@ exports.updatelikedposts = async (req, res, next) => {
       await user.save();
       await post.save();
 
-      return res.status(200).json({ message: 'Post unliked successfully' });
+      const likesCount = post.likes.length;
+
+      return res.status(200).json({ message: 'Post unliked successfully', likesCount });
     }
 
     // If not, add the post to the user's liked posts
@@ -275,7 +279,9 @@ exports.updatelikedposts = async (req, res, next) => {
     await user.save();
     await post.save();
 
-    res.status(200).json({ message: 'Post liked successfully' });
+    const likesCount = post.likes.length;
+
+    res.status(200).json({ message: 'Post liked successfully', likesCount });
   } catch (error) {
     console.error('Error updating liked posts:', error);
     res.status(500).json({ message: 'Internal server error' });

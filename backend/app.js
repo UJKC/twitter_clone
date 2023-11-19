@@ -41,4 +41,6 @@ Time issue
 Days ago
 Get only required Information
 Optimise by not calling again and again
+likes, comment, retweet count realtime
+likes color if liked
 */

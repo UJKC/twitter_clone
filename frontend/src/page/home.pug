@@ -48,13 +48,17 @@ block content
                             // Check if the response status is 200 or 201
                             if (response.status === 200 || response.status === 201) {
                                 // Create HTML elements for success message and prepend to responseContainer
-                                const successMessage = `<img src=${data.post.picture} alt="ujwal pic">
-                                                        <p style="color: green;"> ${data.post.content}</p>
-                                                        <p style="color: green;"> ${data.post.username}</p>
-                                                        <p style="color: green;"> ${data.post.createdAt}</p>
-                                                        <button class="comment-btn" data-post-id=${data.post._id}><i class="fas fa-comment"></i></button>
-                                                        <button class="retweet-btn" data-post-id=${data.post._id}><i class="fas fa-retweet"></i></button>
-                                                        <button class="heart-btn" data-post-id=${data.post._id}><i class="fas fa-heart"></i></button>`
+                                const successMessage = `<div post-id=${data.post._id}>
+                                                            <img src=${data.post.picture} alt="ujwal pic">
+                                                            <p style="color: green;"> ${data.post.content}</p>
+                                                            <p style="color: green;"> ${data.post.username}</p>
+                                                            <p style="color: green;"> ${data.post.createdAt}</p>
+                                                            <button class="comment-btn" data-post-id=${data.post._id}><i class="fas fa-comment"></i></button>
+                                                            <button class="retweet-btn" data-post-id=${data.post._id}><i class="fas fa-retweet"></i></button>
+                                                            <button class="heart-btn" data-post-id=${data.post._id}><i class="fas fa-heart"></i></button>
+                                                            <div class="likes-count">Likes: 0</div>
+                                                        <div>
+                                                        <hr>`
                                 responseContainer.insertAdjacentHTML('afterbegin', successMessage);
                             }
                         } catch (error) {
@@ -75,15 +79,16 @@ block content
                         data.forEach(post => {
                             const postElement = document.createElement('div');
                             postElement.innerHTML = `<div post-id=${post._id}>
-                                    <img src=${post.postedBy.picture} alt="ujwal pic">
-                                    <p style="color: green;"> ${post.content}</p>
-                                    <p style="color: green;"> ${post.postedBy.username}</p>
-                                    <p style="color: green;"> ${post.createdAt}</p>
-                                    <button class="comment-btn" data-post-id=${post._id}><i class="fas fa-comment"></i></button>
-                                    <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
-                                    <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
-                                </div>
-                                <hr>`;
+                                                        <img src=${post.postedBy.picture} alt="ujwal pic">
+                                                        <p style="color: green;"> ${post.content}</p>
+                                                        <p style="color: green;"> ${post.postedBy.username}</p>
+                                                        <p style="color: green;"> ${post.createdAt}</p>
+                                                        <button class="comment-btn" data-post-id=${post._id}><i class="fas fa-comment"></i></button>
+                                                        <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
+                                                        <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
+                                                        <div class="likes-count" id="likes-count-${post._id}">Likes: ${post.likes.length || 0}</div>
+                                                    </div>
+                                                    <hr>`;
 
                             // Add event listeners to the buttons in the postElement
                             postElement.querySelectorAll('.comment-btn').forEach(button => {
@@ -142,12 +147,12 @@ block content
                                     }
                                 });
                             });
-
+                            
                             postElement.querySelectorAll('.heart-btn').forEach(button => {
                                 button.addEventListener('click', async function () {
                                     // Get the post-id attribute value
                                     var postId = this.getAttribute('data-post-id');
-
+                                    const likesCountElement = document.getElementById(`likes-count-${postId}`);
                                     // Display the post-id in an alert
                                     alert('Heart Post ID: ' + postId);
                                     try {
@@ -164,6 +169,12 @@ block content
 
                                         // Handle the response data as needed
                                         console.log('Heart Button Clicked (PUT):', data);
+                                        if (likesCountElement) {
+                                            likesCountElement.textContent = `Likes: ${data.likesCount !== null ? data.likesCount : 0}`;
+                                        }
+                                        else {
+                                            console.error('Likes count element not found');
+                                        }
                                     } catch (error) {
                                         console.error('Error updating post:', error);
                                         // Handle the error as needed
