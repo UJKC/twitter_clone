@@ -234,8 +234,18 @@ exports.getallposts = async (req, res, posts) => {
 
     // Use for...of loop to iterate over posts
     for (var poster of posts) {
-      var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
-      if (populatedPost.retweetPost != null || populatedPost.retweetPost != 0) {
+      if (poster.retweetPost != null || poster.retweetPost != 0) {
+        var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
+        populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
+        populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
+        populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
+        populatedPost.createdAt = new Date(populatedPost.createdAt);
+        poster_array.push(populatedPost);
+      }
+      else {
+        var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
+        await Post.findById(poster._id).populate('retweetPost', '-password');
+        await Post.findById(poster._id).populate('retweetPost.postedBy', '-password');
         populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
         populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
         populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
