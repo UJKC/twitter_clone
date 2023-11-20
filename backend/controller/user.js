@@ -223,6 +223,8 @@ exports.postinput = async (req, res, next) => {
 
 exports.getallposts = async (req, res, posts) => {
   var poster_array = [];
+  var poster_array_retweet = [];
+  var poster_array_retweet_tweet = [];
   const options = {
     timeZone: 'Asia/Kolkata', // Indian Standard Time
     dateStyle: 'full',
@@ -234,28 +236,34 @@ exports.getallposts = async (req, res, posts) => {
 
     // Use for...of loop to iterate over posts
     for (var poster of posts) {
-      if (poster.retweetPost != null || poster.retweetPost != 0) {
-        var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
-        populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
-        populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
-        populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
-        populatedPost.createdAt = new Date(populatedPost.createdAt);
-        poster_array.push(populatedPost);
+      var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
+      populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
+      populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
+      populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
+      populatedPost.createdAt = new Date(populatedPost.createdAt);
+      poster_array.push(populatedPost);
+    }
+    for (var poster of poster_array) {
+      if (poster.retweetPost != null && poster.retweetPost != 0) {
+        var populatedPostPostedBy = await Post.findById(poster._id).populate('retweetPost');
+        poster_array_retweet.push(populatedPostPostedBy);
       }
       else {
-        var populatedPost = await Post.findById(poster._id).populate('postedBy', '-password');
-        await Post.findById(poster._id).populate('retweetPost', '-password');
-        await Post.findById(poster._id).populate('retweetPost.postedBy', '-password');
-        populatedPost.postedBy.firstName = decryptData(populatedPost.postedBy.firstName)
-        populatedPost.postedBy.lastName = decryptData(populatedPost.postedBy.lastName)
-        populatedPost.postedBy.username = decryptData(populatedPost.postedBy.username)
-        populatedPost.createdAt = new Date(populatedPost.createdAt);
-        poster_array.push(populatedPost);
+        poster_array_retweet.push(poster)
       }
     }
-    
-    console.log(poster_array)
-    res.status(200).json(poster_array);
+    for (var poster of poster_array_retweet) {
+      if (poster.retweetPost != null && poster.retweetPost != 0) {
+        var populatedPostPostedByRetweet = await Post.populate(poster.retweetPost, { path: 'postedBy', select: '-password' });
+        poster_array_retweet_tweet.push(populatedPostPostedByRetweet);
+      }
+      else {
+        poster_array_retweet_tweet.push(poster)
+      }
+    }
+
+    console.log("OK:", poster_array_retweet)
+    res.status(200).json(poster_array_retweet);
   }
   catch (error) {
     console.error('Error fetching posts:', error);
@@ -342,7 +350,7 @@ exports.updatetweetposts = async (req, res, next) => {
     // Get counts for likes, retweets, and comments on the original post
     const likeCount = originalPost.likes.length;
     const retweetCount = originalPost.retweetUsers.length;
-    const commentCount = originalPost.comments.length;
+    // const commentCount = originalPost.comments.length;
 
     res.status(201).json({
       message: 'Post retweeted successfully',

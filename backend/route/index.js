@@ -33,7 +33,7 @@ app.post('/api/posts', postinput)
 app.get('/api/posts', postinput)
 app.get('/api/all/posts', getallposts)
 app.put('/api/posts/like/:postid', updatelikedposts)
-app.put('/api/posts/retweet/:postid', updatetweetposts)
+app.post('/api/posts/retweet/:postid', updatetweetposts)
 
 /*
 app.post('/api/posts', postoutput)

@@ -74,24 +74,42 @@ block content
                     const data = await response.json();
 
                     // Check if the response status is 200
-                    if (response.status === 200) {
-                        // Iterate over the data array and append each post to the responseContainer
-                        data.forEach(post => {
-                            const postElement = document.createElement('div');
-                            // Wrong logic
-                            // const retweetedBy = post.retweetedUsers.length > 0 ? `<p style="color: blue;">Retweeted by: ${post.retweetedUsers[0].username}</p>` : '';
+                    for (const post of data) {
+                        const postElement = document.createElement('div');
+
+                        // Check if the post is a retweet
+                        if (post.retweetPost) {
+                            // Display retweet information
+                            const originalPost = post.retweetPost; // Assuming retweetPost is a reference to the original post
+
                             postElement.innerHTML = `<div post-id=${post._id}>
-                                                        <img src=${post.postedBy.picture} alt="ujwal pic">
-                                                        <p style="color: green;"> ${post.content}</p>
-                                                        <p style="color: green;"> ${post.postedBy.username}</p>
-                                                        <p style="color: green;"> ${post.createdAt}</p>
-                                                        <button class="comment-btn" data-post-id=${post._id}><i class="fas fa-comment"></i></button>
-                                                        <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
-                                                        <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
-                                                        <div class="likes-count" id="likes-count-${post._id}">Likes: ${post.likes.length || 0}</div>
-                                                        <div class="retweet-count" id="retweet-count-${post._id}">Retweets: ${post.retweetUsers.length || 0}</div>
-                                                    </div>
-                                                    <hr>`;
+                                <p style="color: blue;">Retweeted by: ${post.postedBy.username}</p>
+                                <p style="color: green;">Original Post:</p>
+                                <img src=${originalPost.postedBy.picture} alt="ujwal pic">
+                                <p style="color: green;"> ${originalPost.content}</p>
+                                <p style="color: green;"> ${originalPost.postedBy.username}</p>
+                                <p style="color: green;"> ${originalPost.createdAt}</p>
+                                <button class="comment-btn" data-post-id=${originalPost._id}><i class="fas fa-comment"></i></button>
+                                <button class="retweet-btn" data-post-id=${originalPost._id}><i class="fas fa-retweet"></i></button>
+                                <button class="heart-btn" data-post-id=${originalPost._id}><i class="fas fa-heart"></i></button>
+                                <div class="likes-count" id="likes-count-${originalPost._id}">Likes: ${originalPost.likes.length || 0}</div>
+                            </div>`;
+                        } 
+                        else {
+                            // Display original post information
+                            postElement.innerHTML = `<div post-id=${post._id}>
+                                <img src=${post.postedBy.picture} alt="ujwal pic">
+                                <p style="color: green;"> ${post.content}</p>
+                                <p style="color: green;"> ${post.postedBy.username}</p>
+                                <p style="color: green;"> ${post.createdAt}</p>
+                                <button class="comment-btn" data-post-id=${post._id}><i class="fas fa-comment"></i></button>
+                                <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
+                                <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
+                                <div class="likes-count" id="likes-count-${post._id}">Likes: ${post.likes.length || 0}</div>
+                            </div>`;
+                        }
+                
+
 
                             // Add event listeners to the buttons in the postElement
                             postElement.querySelectorAll('.comment-btn').forEach(button => {
@@ -191,9 +209,9 @@ block content
                             });
 
                             responseContainer.insertBefore(postElement, responseContainer.firstChild);
-                        });
-                    }
+                    };
                 }
+                
                 catch (error) {
                     console.error('Error fetching posts:', error);
                     // Handle the error as needed
