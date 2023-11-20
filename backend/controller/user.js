@@ -287,3 +287,37 @@ exports.updatelikedposts = async (req, res, next) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.updatetweetposts = async (req, res, next) => {
+  try {
+    const userId = req.session.user._id; // Replace with the actual user id, you can get this from the user authentication
+    const postId = req.params.postid;
+
+    const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+    // Check if the post is already liked by the user
+    
+    if (user.likes.includes(postId)) {
+      // User has already liked the post, remove the like
+      user.likes.pull(postId);
+      post.likes.pull(userId);
+
+      await user.save();
+      await post.save();
+
+      const likesCount = post.likes.length;
+
+      return res.status(200).json({ message: 'Post unliked successfully', likesCount });
+    }
+
+    // If not, add the post to the user's liked posts
+    user.likes.push(postId);
+    post.likes.push(userId);
+
+    await user.save();
+    await post.save();
+
+    const likesCount = post.likes.length;
+
+    res.status(200).json({ message: 'Post liked successfully', likesCount });
+};
