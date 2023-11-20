@@ -78,8 +78,10 @@ block content
                         // Iterate over the data array and append each post to the responseContainer
                         data.forEach(post => {
                             const postElement = document.createElement('div');
+                            const retweetedBy = post.retweetedUsers.length > 0 ? `<p style="color: blue;">Retweeted by: ${post.retweetedUsers[0].username}</p>` : '';
                             postElement.innerHTML = `<div post-id=${post._id}>
                                                         <img src=${post.postedBy.picture} alt="ujwal pic">
+                                                        ${retweetedBy}
                                                         <p style="color: green;"> ${post.content}</p>
                                                         <p style="color: green;"> ${post.postedBy.username}</p>
                                                         <p style="color: green;"> ${post.createdAt}</p>
@@ -87,6 +89,7 @@ block content
                                                         <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
                                                         <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
                                                         <div class="likes-count" id="likes-count-${post._id}">Likes: ${post.likes.length || 0}</div>
+                                                        <div class="retweet-count" id="retweet-count-${post._id}">Retweets: ${post.retweetUsers.length || 0}</div>
                                                     </div>
                                                     <hr>`;
 
@@ -128,26 +131,26 @@ block content
                                     // Display the post-id in an alert
                                     alert('Retweet Post ID: ' + postId);
                                     try {
-                                        const response = await fetch('/api/posts', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify({ content: textContent }),
+                                        const response = await fetch(`/api/posts/retweet/${postId}`, {
+                                        method: 'POST', // Assuming you use a POST request for retweeting
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        // Include any additional options or data in the request as needed
                                         });
 
                                         const data = await response.json();
 
-                                        // Handle the response data as needed
-                                        console.log('Retweet Button Clicked (Post):', data);
-                                        if (likesCountElement) {
-                                            likesCountElement.textContent = `Likes: ${data.likesCount !== null ? data.likesCount : 0}`;
-                                        }
-                                        else {
-                                            console.error('Likes count element not found');
+                                        // Log or handle the response data as needed
+                                        console.log('Retweet Button Clicked:', data);
+
+                                        // Update the UI based on the response (e.g., update retweet count)
+                                        const retweetCountElement = event.target.parentElement.querySelector('.retweet-count');
+                                        if (retweetCountElement) {
+                                        retweetCountElement.textContent = data.originalPostCounts.retweetCount;
                                         }
                                     } catch (error) {
-                                        console.error('Error updating post:', error);
+                                        console.error('Error retweeting post:', error);
                                         // Handle the error as needed
                                     }
                                 });
