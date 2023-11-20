@@ -291,33 +291,54 @@ exports.updatelikedposts = async (req, res, next) => {
 exports.updatetweetposts = async (req, res, next) => {
   try {
     const userId = req.session.user._id; // Replace with the actual user id, you can get this from the user authentication
-    const postId = req.params.postid;
 
     const user = await User.findById(userId);
-    const post = await Post.findById(postId);
     // Check if the post is already liked by the user
+
+    // Check if the post exists
+    const originalPost = await Post.findById(req.params.postid);
+    if (!originalPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
     
-    if (user.likes.includes(postId)) {
-      // User has already liked the post, remove the like
-      user.likes.pull(postId);
-      post.likes.pull(userId);
+    if (originalPost.retweetUsers.includes(userId)) {
+      originalPost.retweetUsers.pull(userId);
+      await originalPost.save();
+      // Get counts for likes, retweets, and comments on the original post
+      const likeCount = originalPost.likes.length;
+      const retweetCount = originalPost.retweetUsers.length;
+      const commentCount = originalPost.comments.length;
 
-      await user.save();
-      await post.save();
-
-      const likesCount = post.likes.length;
-
-      return res.status(200).json({ message: 'Post unliked successfully', likesCount });
+      return res.status(200).json({
+        message: 'Retweet removed successfully',
+        originalPostCounts: { likeCount, retweetCount, commentCount },
+      });
     }
 
-    // If not, add the post to the user's liked posts
-    user.likes.push(postId);
-    post.likes.push(userId);
+    // Create a new post for the retweet
+    const retweetPost = new Post({
+      // content: '', // Uncomment this line if you want an empty content in the retweet post
+      postedBy: userId,
+      // retweetUsers: [], // Uncomment this line if you want an empty retweetUsers array
+      retweetPost: [originalPost._id],
+    });
 
-    await user.save();
-    await post.save();
+    const savedRetweetPost = await retweetPost.save();
+    originalPost.retweetUsers.push(userId);
+    await originalPost.save();
+    // Get counts for likes, retweets, and comments on the original post
+    const likeCount = originalPost.likes.length;
+    const retweetCount = originalPost.retweetUsers.length;
+    const commentCount = originalPost.comments.length;
 
-    const likesCount = post.likes.length;
-
-    res.status(200).json({ message: 'Post liked successfully', likesCount });
+    res.status(201).json({
+      message: 'Post retweeted successfully',
+      retweetPost: savedRetweetPost,
+      originalPostCounts: { likeCount, retweetCount, commentCount },
+    });
+  }
+  catch (error) {
+    console.error('Error retweeting post:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
