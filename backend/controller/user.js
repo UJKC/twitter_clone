@@ -245,20 +245,19 @@ exports.getallposts = async (req, res, posts) => {
     }
     for (var poster of poster_array) {
       if (poster.retweetPost != null && poster.retweetPost != 0) {
+        var postedByPopulated = poster.postedBy;
         var populatedPostPostedBy = await Post.findById(poster._id).populate('retweetPost');
-        poster_array_retweet.push(populatedPostPostedBy);
+        var populatedPostPostedByClone = populatedPostPostedBy.retweetPost;
+        var populatedPostPostedByRetweetPopulated = await Post.findById(populatedPostPostedByClone._id).populate('postedBy');
+        var populatedPostPostedByRetweetPopulatedPostedBy = populatedPostPostedByRetweetPopulated.postedBy;
+        populatedPostPostedByRetweetPopulatedPostedBy.username = decryptData(populatedPostPostedByRetweetPopulatedPostedBy.username);
+        poster.postedBy = postedByPopulated;
+        poster.retweetPost = populatedPostPostedByClone;
+        poster.retweetPost.postedBy = populatedPostPostedByRetweetPopulatedPostedBy;
+        poster_array_retweet.push(poster);
       }
       else {
         poster_array_retweet.push(poster)
-      }
-    }
-    for (var poster of poster_array_retweet) {
-      if (poster.retweetPost != null && poster.retweetPost != 0) {
-        var populatedPostPostedByRetweet = await Post.populate(poster.retweetPost, { path: 'postedBy', select: '-password' });
-        poster_array_retweet_tweet.push(populatedPostPostedByRetweet);
-      }
-      else {
-        poster_array_retweet_tweet.push(poster)
       }
     }
 
