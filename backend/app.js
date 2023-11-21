@@ -44,4 +44,5 @@ Optimise by not calling again and again
 likes, comment, retweet count realtime
 likes color if liked
 retweet post with message
+retweet show after retweet
 */

@@ -312,7 +312,6 @@ exports.updatetweetposts = async (req, res, next) => {
   try {
     const userId = req.session.user._id; // Replace with the actual user id, you can get this from the user authentication
 
-    const user = await User.findById(userId);
     // Check if the post is already liked by the user
 
     // Check if the post exists
@@ -350,8 +349,21 @@ exports.updatetweetposts = async (req, res, next) => {
     const retweetCount = originalPost.retweetUsers.length;
     // const commentCount = originalPost.comments.length;
 
+    savedRetweetPost.postedBy = req.session.user;
+    savedRetweetPost.retweetPost = originalPost;
+
+    const user = await User.findById(originalPost.postedBy);
+    user.postedBy.firstName = decryptData(user.postedBy.firstName)
+    user.postedBy.lastName = decryptData(user.postedBy.lastName)
+    user.postedBy.username = decryptData(user.postedBy.username)
+
+    savedRetweetPost.retweetPost.postedBy = user;
+
+    console.log(savedRetweetPost)
+
     res.status(201).json({
       message: 'Post retweeted successfully',
+      postedBy: req.session.user,
       retweetPost: savedRetweetPost,
       originalPostCounts: { likeCount, retweetCount },
     });
