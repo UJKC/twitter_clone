@@ -327,11 +327,10 @@ exports.updatetweetposts = async (req, res, next) => {
       // Get counts for likes, retweets, and comments on the original post
       const likeCount = originalPost.likes.length;
       const retweetCount = originalPost.retweetUsers.length;
-      const commentCount = originalPost.comments.length;
 
       return res.status(200).json({
         message: 'Retweet removed successfully',
-        originalPostCounts: { likeCount, retweetCount, commentCount },
+        originalPostCounts: { likeCount, retweetCount },
       });
     }
 
@@ -354,7 +353,7 @@ exports.updatetweetposts = async (req, res, next) => {
     res.status(201).json({
       message: 'Post retweeted successfully',
       retweetPost: savedRetweetPost,
-      originalPostCounts: { likeCount, retweetCount, commentCount },
+      originalPostCounts: { likeCount, retweetCount },
     });
   }
   catch (error) {

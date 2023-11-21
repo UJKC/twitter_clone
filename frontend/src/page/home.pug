@@ -93,6 +93,7 @@ block content
                                 <button class="retweet-btn" data-post-id=${originalPost._id}><i class="fas fa-retweet"></i></button>
                                 <button class="heart-btn" data-post-id=${originalPost._id}><i class="fas fa-heart"></i></button>
                                 <div class="likes-count" id="likes-count-${originalPost._id}">Likes: ${originalPost.likes.length || 0}</div>
+                                <div class="retweet-count" id="retweet-count-${originalPost._id}">Retweets: ${originalPost.retweetUsers.length || 0}</div>
                             </div>`;
                         } 
                         else {
@@ -106,10 +107,9 @@ block content
                                 <button class="retweet-btn" data-post-id=${post._id}><i class="fas fa-retweet"></i></button>
                                 <button class="heart-btn" data-post-id=${post._id}><i class="fas fa-heart"></i></button>
                                 <div class="likes-count" id="likes-count-${post._id}">Likes: ${post.likes.length || 0}</div>
+                                <div class="retweet-count" id="retweet-count-${post._id}">Retweets: ${post.retweetUsers.length || 0}</div>
                             </div>`;
                         }
-                
-
 
                             // Add event listeners to the buttons in the postElement
                             postElement.querySelectorAll('.comment-btn').forEach(button => {
